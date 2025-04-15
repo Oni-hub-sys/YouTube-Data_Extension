@@ -1,0 +1,1 @@
+// Background worker - not used but required for manifest
