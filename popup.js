@@ -43,23 +43,23 @@ function getYouTubeInfo() {
 
   (async () => {
     try {
-      const title = document.querySelector("h1.ytd-watch-metadata")?.innerText || "N/A";
-      const channel = document.querySelector("#text-container.ytd-channel-name")?.innerText || "N/A";
-      const views = document.querySelector(".view-count")?.innerText || "N/A";
-      const date = document.querySelector("#info-strings yt-formatted-string")?.innerText || "N/A";
+      const title = (document.querySelector("h1.ytd-watch-metadata")?.innerText || "N/A").trim();
+      const channel = (document.querySelector("#text-container.ytd-channel-name")?.innerText || "N/A").replace(/\s+/g, ' ').trim();
+      const views = (document.querySelector(".view-count")?.innerText || "N/A").trim();
+      const date = (document.querySelector("#info-strings yt-formatted-string")?.innerText || "N/A").trim();
 
-      const runtimeRaw = document.querySelector("span.ytp-time-duration")?.innerText || "N/A";
+      const runtimeRaw = (document.querySelector("span.ytp-time-duration")?.innerText || "N/A").trim();
       const runtime = parseDuration(runtimeRaw);
 
       let commentsRaw = await waitForComments();
       let commentCount = commentsRaw.match(/\d[\d,.KMB]*/) ? commentsRaw.match(/\d[\d,.KMB]*/)[0] : "0";
 
-      const output = ` Title: ${title}
- Channel: ${channel}
- Views: ${views}
- Published: ${date}
- Duration: ${runtime}
- Comments: ${commentCount}`;
+      const output = `Title: ${title}
+Channel: ${channel}
+Views: ${views}
+Published: ${date}
+Duration: ${runtime}
+Comments: ${commentCount}`;
 
       navigator.clipboard.writeText(output).catch(() => {
         const textarea = document.createElement("textarea");
@@ -70,7 +70,6 @@ function getYouTubeInfo() {
         document.body.removeChild(textarea);
       });
     } catch (e) {
-      // Fail silently
       console.error("Copy failed:", e);
     }
   })();
