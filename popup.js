@@ -4,7 +4,7 @@ document.getElementById("copyInfo").addEventListener("click", () => {
       target: { tabId: tabs[0].id },
       func: getYouTubeInfo,
     });
-    window.close(); // Close the popup immediately after click
+    window.close();
   });
 });
 
@@ -24,7 +24,6 @@ function getYouTubeInfo() {
     return new Promise((resolve) => {
       const interval = 100;
       let waited = 0;
-
       const check = () => {
         const commentHeader = document.querySelector("ytd-comments-header-renderer #count");
         if (commentHeader) {
@@ -36,7 +35,6 @@ function getYouTubeInfo() {
           setTimeout(check, interval);
         }
       };
-
       check();
     });
   }
@@ -44,7 +42,12 @@ function getYouTubeInfo() {
   (async () => {
     try {
       const title = (document.querySelector("h1.ytd-watch-metadata")?.innerText || "N/A").trim();
-      const channel = (document.querySelector("#text-container.ytd-channel-name")?.innerText || "N/A").replace(/\s+/g, ' ').trim();
+      
+      // Updated channel name selector
+      const channel = (document.querySelector("ytd-video-owner-renderer yt-formatted-string.ytd-channel-name")?.innerText || 
+                      document.querySelector("#owner a.ytd-channel-name")?.innerText || 
+                      "N/A").trim();
+      
       const views = (document.querySelector(".view-count")?.innerText || "N/A").trim();
       const date = (document.querySelector("#info-strings yt-formatted-string")?.innerText || "N/A").trim();
 
@@ -57,7 +60,7 @@ function getYouTubeInfo() {
       const output = `Title: ${title}
 Channel: ${channel}
 Views: ${views}
-Published: ${date}
+Published on: ${date}
 Duration: ${runtime}
 Comments: ${commentCount}`;
 
